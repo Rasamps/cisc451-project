@@ -1,2 +1,2 @@
-train_data_no_null.csv: C2T1_Train.csv with columns removed that had at least 40% of their values being missing values
-data_no_null.py: code to create train_data_no_null
+train_data_cleaned1.csv: C2T1_Train.csv with columns removed that had at least 40% of their values being missing values, encounter_id2 and patient_id2 removed (file                          created by running data_cleaning.py)
+data_cleaning.py: code to create train_data_cleaned1.csv -- feel free to add to it, I couldn't figure out how to get correlation between categorical attributes, and                                                              non of the numeric attributes are very correlated so that didn't remove any
