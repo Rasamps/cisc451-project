@@ -1,0 +1,2 @@
+train_data_no_null.csv: C2T1_Train.csv with columns removed that had at least 40% of their values being missing values
+data_cleaning.py: code to create train_data_no_null
