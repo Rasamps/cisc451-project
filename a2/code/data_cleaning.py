@@ -1,12 +1,15 @@
-import pandas as pd 
+import os
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy.stats as ss
 
+os.chdir('..') #Makes accessing the data folder more straight-forward.
+
 def main():
     #read in data
-    data = pd.read_csv('C2T1Data/C2T1_Train.csv')
+    data = pd.read_csv('data/C2T1_Train.csv')
 
     data_no_null = missing_values(data)
 
@@ -28,7 +31,7 @@ def missing_values(data):
     #get list of columns/features with any nan values
     data_with_any_null = data[data.columns[data.isnull().any()].tolist()]
 
-    #for each of the columns with nans, calculate percentage of nans 
+    #for each of the columns with nans, calculate percentage of nans
     percent_missing = []
     for col in list(data_with_any_null.columns):
         percent = data_with_any_null[col].isnull().sum() * 100/len(data_with_any_null)
@@ -41,11 +44,11 @@ def missing_values(data):
 
     data_no_null = data
     #remove any columns with more than 40% missing values
-    for index, row in missing_values_df.iterrows():  
+    for index, row in missing_values_df.iterrows():
         if row['Percent Missing Values'] > 40:
             column_name = row['Features']
             data_no_null = data_no_null.drop(columns = [column_name])
-    
+
     return data_no_null
 
 def show_numeric_correlations(data):
@@ -63,9 +66,9 @@ def show_numeric_correlations(data):
     cmap = sns.diverging_palette(230,20,as_cmap=True)
 
     plt.figure()
-    plot = sns.heatmap(correlations, mask=mask, cmap=cmap, vmax=1, center=0, 
+    plot = sns.heatmap(correlations, mask=mask, cmap=cmap, vmax=1, center=0,
     square=True, linewidths=0.5, cbar_kws={"shrink":0.5})
     plt.show()
 
-
-main()
+print(os.getcwd())
+# main()
