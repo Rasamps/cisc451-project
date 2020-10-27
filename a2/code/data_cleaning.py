@@ -2,22 +2,23 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import seaborn as sns
 import scipy.stats as ss
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import mutual_info_classif
 
 os.chdir('..') #Makes accessing the data folder more straight-forward.
 
 def main():
     #read in data
-    data = pd.read_csv('data/C2T1_Train.csv')
-
-    data_no_null = missing_values(data)
-
-    #remove encounter_rd2 and patient_nbr2
-    data = data_no_null.drop(columns = ['encounter_id2', 'patient_nbr2'])
-
-    show_numeric_correlations(data)
-    data.to_csv('train_data_cleaned1.csv')
+    data = pd.read_csv('data/C2T1_Train.csv') #Read in the data.
+    data = missing_values(data) #Drop features which over 40% of the data missing.
+    #Remove encounter_rd2 and patient_nbr2
+    data = data.drop(columns = ['encounter_id2', 'patient_nbr2']) #These are removed as they are the unique identifiers and shouldn't be considered for the analysis
+    show_numeric_correlations(data) #Create plots showing the correlation between numeric features
+    mi_select(data)
+    # data.to_csv('train_data_cleaned1.csv')
 
 def missing_values(data):
     #{
@@ -70,5 +71,39 @@ def show_numeric_correlations(data):
     square=True, linewidths=0.5, cbar_kws={"shrink":0.5})
     plt.show()
 
-print(os.getcwd())
-# main()
+def mi_select(data):
+    #Separate into input features and target variable.
+    X, y = data.loc[:, data.columns != 'readmitted'], data['readmitted']
+
+    #Encode categorical variables
+    categorical_cols = X.select_dtypes(['object']).columns
+    numeric_cols = X.select_dtypes(['int64']).columns
+    X_num, X_cat = X[numeric_cols], X[categorical_cols]
+    X_cat[categorical_cols] = X_cat[categorical_cols].astype('category')
+    X_cat[categorical_cols] = X_cat[categorical_cols].apply(lambda elem: elem.cat.codes)
+
+    def get_ratio(col):
+        vals = col.unique()
+        ratio = 0
+        for val in vals:
+            curr = col[col == val].count() / len(col)
+            if (curr > ratio):
+                ratio = curr
+        return ratio
+
+    ratios = []
+    for col in categorical_cols:
+        ratios.append(get_ratio(X[col]))
+
+    mi_num = mutual_info_classif(X_num,y, discrete_features = 'auto')
+    mi_cat = mutual_info_classif(X_num,y, discrete_features = 'auto')
+
+    fig_num = go.Figure([go.Bar(x = numeric_cols, y = mi_num)])
+    fig_num.show()
+
+    fig_cat = go.Figure([go.Bar(x = categorical_cols, y = mi_cat, name = "Mutual Info"),
+                        go.Scatter(x = categorical_cols, y = ratios, name = "Label Ratio",
+                                    mode = 'lines+markers')])
+    fig_cat.show()
+
+main()
