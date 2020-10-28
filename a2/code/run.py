@@ -20,6 +20,8 @@ def main():
     X_train = data_train[feats]
     X_test = data_test[feats]
 
+    print(X_train.gender[X_train.gender == 'Unknown/Invalid'].count())
+
     X_train = preprocess.missing(X_train,ohe)
     X_test = preprocess.missing(X_test,ohe)
 
@@ -28,6 +30,6 @@ def main():
     X_test = preprocess.label(X_test,to_label)
     X_test = preprocess.one_hot(X_test,ohe)
 
-    predictions = model.sup_vec(X_train,y_train,X_test)
+    # predictions = model.sup_vec(X_train,y_train,X_test)
 
 main()

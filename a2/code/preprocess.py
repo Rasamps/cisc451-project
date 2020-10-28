@@ -7,8 +7,12 @@ from sklearn.compose import ColumnTransformer
 
 def missing(data,labels):
     for lbl in labels:
-        imp = SimpleImputer(missing_values = '?', strategy = 'most_frequent')
-        data[lbl] = imp.fit_transform(data[lbl].to_numpy().reshape(-1,1))
+        if (lbl == 'race'):
+            imp = SimpleImputer(missing_values = '?', strategy = 'most_frequent')
+            data[lbl] = imp.fit_transform(data[lbl].to_numpy().reshape(-1,1))
+        else:
+            imp = SimpleImputer(missing_values = 'Unknown/Invalid', strategy = 'most_frequent')
+            data[lbl] = imp.fit_transform(data[lbl].to_numpy().reshape(-1,1))
     return data
 
 def label(data,labels):
