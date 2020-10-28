@@ -13,7 +13,9 @@ def sup_vec(X_train, y_train, X_test):
               # 'coef0': [0.0, 0.5]
     }
     svc = SVC()
-    crossval = GridSearchCV(svc, params, cv = 3, scoring = 'accuracy')
+    print("Here!!!")
+    crossval = GridSearchCV(svc, params, cv = 3, scoring = 'accuracy', verbose = 2)
+    print("Here!!!")
     crossval.fit(X_train, y_train)
     print("The best parameter combination was : ", crossval.best_params_)
     return crossval.predict(X_test)
