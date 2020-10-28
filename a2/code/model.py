@@ -6,11 +6,11 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix
 
 def sup_vec(X_train, y_train, X_test):
-    params = {'C': [0.1, 1.0, 5, 10],
-              'kernel': ['poly','rbf'],
-              'degree': [3,4,5],
-              'gamma': ['scale','auto'],
-              'coef0': [0.0, 0.5, 1.0, 5.0]
+    params = {'C': [0.1],
+              'kernel': ['poly','rbf']
+              # 'degree': [3,4],
+              # 'gamma': ['scale','auto'],
+              # 'coef0': [0.0, 0.5]
     }
     svc = SVC()
     crossval = GridSearchCV(svc, params, cv = 3, scoring = 'accuracy')

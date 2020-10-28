@@ -20,6 +20,9 @@ def main():
     X_train = data_train[feats]
     X_test = data_test[feats]
 
+    X_train = preprocess.missing(X_train,ohe)
+    X_test = preprocess.missing(X_test,ohe)
+
     X_train = preprocess.label(X_train,to_label)
     X_train = preprocess.one_hot(X_train,ohe)
     X_test = preprocess.label(X_test,to_label)

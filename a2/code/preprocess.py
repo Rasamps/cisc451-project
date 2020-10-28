@@ -4,6 +4,12 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
 
+def missing(data,labels):
+    for lbl in labels:
+        imp = SimpleImputer(missing_values = '?', strategy = 'most_frequent')
+        data[lbl] = imp.fit_transform(data[lbl])
+    return data
+
 def label(data,labels):
     for lbl in labels:
         le = LabelEncoder()
