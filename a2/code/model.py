@@ -29,7 +29,9 @@ def nn(X_train, y_train, X_test):
         'alpha': [0.0001, 0.01, 1.0]
     }
     mlp = MLPClassifier()
-    crossval = GridSearchCV(mlp, params, cv = 3, scoring = 'accuracy')
+    crossval = GridSearchCV(mlp, params, cv = 3, scoring = 'accuracy', verbose = True)
     crossval.fit(X_train, y_train)
-    print(confusion_matrix(y_train, crossval.predict(X_train)))
+    val_preds = crossval.predict(X_train)
+    print(confusion_matrix(y_train, val_preds))
+    print(accuracy_score(y_train, val_preds))
     return crossval.predict(X_test)

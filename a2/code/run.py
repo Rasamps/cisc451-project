@@ -28,6 +28,10 @@ def main():
     X_test = preprocess.label(X_test,to_label)
     X_test = preprocess.one_hot(X_test,ohe)
 
-    predictions = model.sup_vec(X_train,y_train,X_test)
+    predictions = model.nn(X_train,y_train,X_test)
+
+    test_labeled = data_test[['encounter_id','patient_nbr']]
+    test_labeled['readmitted'] = predictions
+    test_labeled.to_csv('C2T1_Test_Labeled.csv', index = False)
 
 main()
