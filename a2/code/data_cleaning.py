@@ -98,7 +98,7 @@ def mi_select(data):
     mi_num = mutual_info_classif(X_num,y, discrete_features = 'auto')
     mi_cat = mutual_info_classif(X_num,y, discrete_features = 'auto')
 
-    fig_num = go.Figure([go.Bar(x = numeric_cols, y = mi_num)])
+    fig_num = go.Figure([go.Bar(x = numeric_cols, y = mi_num, name = "Mutual Info")])
     fig_num.show()
 
     fig_cat = go.Figure([go.Bar(x = categorical_cols, y = mi_cat, name = "Mutual Info"),
