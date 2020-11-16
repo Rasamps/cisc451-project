@@ -39,6 +39,9 @@ def elbow_check(rfm):
             x = ks, y = inertias
         )
     )
+    fig.update_xaxes(title_text = 'K')
+    fig.update_yaxes(title_text = 'Sum of squared distances of records to their closest cluster center')
+    fig.update_layout(title_text = 'Elbow Method Test')
     fig.show()
 
 def kmeans(rfm):
@@ -47,12 +50,22 @@ def kmeans(rfm):
         columns = ['X','Y']
     )
     kmodel = KMeans(n_clusters = 5).fit(pca_rfm)
-    rfm['Labels'], pca_rfm['Labels'] = kmodel.labels_, kmodel.labels_
+    distances = pd.DataFrame(data = kmodel.transform(pca_rfm), columns = ['Cluster1','Cluster2','Cluster3','Cluster4','Cluster5'])
+    rfm['Labels'], pca_rfm['Labels'], distances['Labels'] = kmodel.labels_, kmodel.labels_, kmodel.labels_
     fig = go.Figure(go.Scatter(
         x = pca_rfm.X, y = pca_rfm.Y,
-        mode = 'markers', marker_color = pca_rfm.Labels
+        mode = 'markers', marker = dict(color=pca_rfm.Labels, size = 5, showscale=True)
     ))
+    fig.update_xaxes(title_text = 'Principal Component 1')
+    fig.update_yaxes(title_text = 'Principal Component 2')
+    fig.update_layout(title_text = 'K-Means Clustering Results')
     fig.show()
+    print('The K-means clustering metrics are...\n')
+    for cluster in range(1,6):
+        curr = 'Cluster'+str(cluster)
+        s = np.sum((distances[curr][distances.Labels == (cluster-1)])**2)
+        print('For Cluster',cluster,'the ssd of the points is:',s)
+
     return rfm
 
 def distribution(rfm):
@@ -64,6 +77,9 @@ def distribution(rfm):
     fig = go.Figure(go.Bar(
         x = [1,2,3,4,5], y = percentages
     ))
+    fig.update_yaxes(title_text = 'Percentage')
+    fig.update_xaxes(title_text = 'Cluster')
+    fig.update_layout(title_text = 'Distribution of customers in the five clusters')
     fig.show()
 
 def metrics(rfm_og):
@@ -89,7 +105,6 @@ def wordclouds(purchases):
         cluster_text = ' '.join(product for product in purchases.Description[purchases.Labels == cluster])
         wordcloud = WordCloud(max_font_size=50,max_words=25,background_color='black').generate(cluster_text)
         ax[i].imshow(wordcloud, interpolation='bilinear')
-        ax[i].set_title('Cluster: ' + str(cluster), fontsize=15)
         ax[i].axis('off')
     plt.show()
 
@@ -99,11 +114,11 @@ def main():
     rfm_og = rfm
     rfm = process(rfm,True)
     rfm_og = process(rfm_og,False)
-    # elbow_check(rfm)
+    elbow_check(rfm)
     rfm = kmeans(rfm)
-    # distribution(rfm)
+    distribution(rfm)
     rfm_og['Labels'] = rfm.Labels
-    # metrics(rfm_og)
+    metrics(rfm_og)
 
     purchases = pd.read_csv('purchases.csv', header = 0, index_col = None)
     purchases = purchases.join(rfm.set_index('CustomerID'), on = 'CustomerID', how = 'inner', lsuffix = '_caller', rsuffix = '_other')
