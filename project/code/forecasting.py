@@ -46,6 +46,7 @@ def fit_ts(ts,train, val):
             if (rmse < max_score):
                 max_score = rmse
                 best_pair = [window,order]
+    print(best_pair)
     ts = ts.sample(frac=0.5, weights = [1/len(ts) for i in range(0,len(ts))]).sort_index(ascending = True)
     ts['RollingAvg'] = ts.loc[:,'value'].rolling(window = best_pair[0]).mean()
     ts = ts.dropna()
@@ -62,10 +63,10 @@ def train_test(ts):
 
 def main():
     countries = ['bd','bh','ca','gt','hk','hu','id','in','iq','kw','lk','lu','mn','no',
-                'np','pe','pk','ug','vm']
+                'np','pe','pk','ug','vn']
     predictions = []
     for country in countries:
-        ts = pd.read_csv('data/air_quality_updated/'+country+'_data.csv', header = 0, index_col = None).filter(['utc','value'],axis=1)
+        ts = pd.read_csv('data/'+country+'_data.csv', header = 0, index_col = None).filter(['utc','value'],axis=1)
         ts = clean(ts)
         results = train_test(ts)
         predictions.append(results)

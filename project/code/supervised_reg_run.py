@@ -1,11 +1,11 @@
+import os
 import pandas as pd
 import numpy as np
 import modeling as md
 from sklearn.preprocessing import StandardScaler
 
-
 def main():
-    df = pd.read_csv('master_with_aq.csv', header = 0)
+    df = pd.read_csv('data/master_with_aq.csv', header = 0)
     df = df.drop(['Unnamed: 0', 'Label', 'Country'], axis=1)
     df[df.columns] = StandardScaler().fit_transform(df)
     print(df.head())
@@ -14,7 +14,7 @@ def main():
     nums = np.arange(0,360,19) #indices of where each new country starts in df
 
     train_indices = np.random.choice(nums, 13, replace=False) #randomly select 13 countries for training
-    
+
     m1 = md.build_model(0,train_indices,pm25,df)
     m2 = md.build_model(1,train_indices,pm25,df)
     m3 = md.build_model(2,train_indices,pm25,df)
@@ -32,15 +32,15 @@ def main():
     models = [m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12,m13]
     #get indices of countries not in training set to use for test set
     test_indices = np.setdiff1d(nums, np.sort(train_indices))
-    
+
     all_Y_actual, all_Y_pred = md.model_driver(test_indices, pm25, df, models)
 
-    
-    
+
+
     #calculate rmse to evaluate the quality of each of the models predictions
     md.model_evaluation(all_Y_actual, all_Y_pred)
 
-    
 
- 
+
+print(os.getcwd(),'\n')
 main()

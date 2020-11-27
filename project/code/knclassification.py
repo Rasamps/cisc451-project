@@ -9,16 +9,19 @@ Original file is located at
 
 import numpy as np
 import pandas as pd
-from google.colab import drive
+import os
+# from google.colab import drives
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import RobustScaler, OneHotEncoder
 
-drive.mount("/content/drive")
+# drive.mount("/content/drive")
+
+print(os.getcwd())
 
 #Setup the Data
-data = pd.read_csv('master_cleaned.csv',header=0,index_col=None)
+data = pd.read_csv('data/master_cleaned.csv',header=0,index_col=None)
 
 #Setup Data
 x_data = data.drop(columns=['Label'])

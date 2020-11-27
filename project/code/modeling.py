@@ -13,7 +13,6 @@ def build_model(i, train_indices, pm25, df):
 
     return m
 
-
 def fit_models(i, test_indices, pm25, df, models):
     #predict a single country's air quality data using each of the 13 models
     #calculate the final prediction values by averaging the results from all 13 models
@@ -49,7 +48,7 @@ def model_driver(test_indices, pm25, df, models):
 
     return all_Y_actual, all_Y_pred
 
-    
+
 def model_evaluation(all_Y_actual, all_Y_pred):
     #calculate rmse for each of the test countries
     rms1 = np.sqrt(mean_squared_error(all_Y_actual[0,:],all_Y_pred[0,:]))
@@ -68,5 +67,3 @@ def model_evaluation(all_Y_actual, all_Y_pred):
     print(rms4)
     print(rms5)
     print(rms6)
-        
-        
