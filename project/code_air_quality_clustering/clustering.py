@@ -41,13 +41,7 @@ def hierarchical_clustering(aq_array):
     aq_clustered["cluster"] = clusters
     aq_clustered = aq_clustered.set_index("cluster".split())
 
-    return aq_clustered
-
-def get_clusters(df_clustered):
-    #separate a single dataframe into three dataframes by cluster
-    
-
-    return cluster1, cluster2 #, cluster3
+    return aq_clustered #output is dataframe with an extra column for the cluster
 
         
 
@@ -60,40 +54,40 @@ def cluster_metrics(cluster):
     c_mean = cluster.mean(axis=1)
     return c_max, c_min, c_median, c_mean
 
+
 def plot_metric(c1_metric, c2_metric, metric_name):
+    #plot the given metric (min, max, etc) for each country, colored by cluster
     fig, ax = plt.subplots()
     ax.plot(range(0,len(c1_metric)),c1_metric.tolist(), '-ok', color='r', label='Cluster 1')
     ax.plot(range(0,len(c2_metric)),c2_metric.tolist(), '-ok', color='b', label='Cluster 2')
-    #ax.plot(range(0,len(c3_metric)),c3_metric.tolist(), '-ok', color='g', label='Cluster 3')
-    #ax.axis('equal')
     plt.title('Cluster ' + metric_name + ' values')
     leg = ax.legend()
     plt.show()
 
 def print_cluster_members(df_clustered, l1, l2, locations):
+    #print the countries belonging to each of the clusters
     c1_countries = [None]*l1
     c2_countries = [None]*l2
-    #c3_countries = [None]*l3
     i1 = 0
     i2 = 0
     i3 = 0
     for i in range(0, len(df_clustered)):   
+        #add each country to corresponding cluster
         if df_clustered.index[i] == 1:
             c1_countries[i1] = locations[i]
             i1 += 1
-        else: # df_clustered.index[i]  == 2:
+        else: 
             c2_countries[i2] = locations[i]
             i2 += 1
     print('Cluster 1 countries:')
     print(c1_countries)
     print('Cluster 2 countries:')
     print(c2_countries)
-    #print('Cluster 3 countries:')
-    #print(c3_countries)
     
     return c1_countries, c2_countries #, c3_countries
 
 def visualize_clusters(df, cluster):
+    #plot all of the data for countries in a single cluster on one axis
     plt.figure()
     for l in range(0,df.shape[0]):
         data = df.iloc[l]
@@ -103,7 +97,7 @@ def visualize_clusters(df, cluster):
     plt.show()   
 
 def run_clustering(array_stand):
-    aq_clustered = hierarchical_clustering(array_stand) #dataframe with cluster column
+    aq_clustered = hierarchical_clustering(array_stand) #run clustering
     cluster1 = aq_clustered.loc[1] #dataframe containing cluster 1 countries
     cluster2 = aq_clustered.loc[2] #dataframe containing cluster 2 countries
     c1_max, c1_min, c1_median, c1_mean = cluster_metrics(cluster1)
