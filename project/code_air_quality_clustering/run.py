@@ -5,6 +5,8 @@ import clustering as cl
 
 
 def main():
+    #the driver to run preprocessing and clustering 
+    
     cd = os.getcwd()
 
     #locations which we have air quality data for
