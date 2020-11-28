@@ -3,7 +3,6 @@ import os
 import cluster_preprocess as pp
 import clustering as cl
 
-
 def main():
     cd = os.getcwd()
     #locations which we have air quality data for

@@ -7,7 +7,7 @@ import numpy as np
 
 def main():
     countries = ['bh','ca','gt','hk','hu','id','in','iq','kw','lk','lu','mn','no',
-                'np','pe','pk','ug','vm']
+                'np','pe','pk','ug','vn']
     complete_data = pd.read_csv('data/bd_data.csv', header = 0, index_col = None).filter(['utc','value'], axis = 1)
     complete_data.rename(columns = {'utc': 'bh_utc', 'value': 'bh_value'})
     for country in countries:
